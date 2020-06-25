@@ -36,11 +36,13 @@ class ThresholdDecoder:
     of 80% means that the network output is greater than roughly 80% of the dataset
     """
     def __init__(self, mu_stds: Tuple[Tuple[float, float]], center=0.5, resolution=200, min_z=-4, max_z=4):
+        print('start ThresholdDecoder init')
         self.min_out = int(min(mu + min_z * std for mu, std in mu_stds))
         self.max_out = int(max(mu + max_z * std for mu, std in mu_stds))
         self.out_range = self.max_out - self.min_out
         self.cd = np.cumsum(self._calc_pd(mu_stds, resolution))
         self.center = center
+        print('end ThresholdDecoder init')
 
     def decode(self, raw_output: float) -> float:
         if raw_output == 1.0 or raw_output == 0.0:

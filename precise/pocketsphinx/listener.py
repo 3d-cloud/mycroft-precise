@@ -60,6 +60,7 @@ class PocketsphinxListener:
         return bool(hyp and self.key_phrase in hyp.hypstr.lower())
 
     def update(self, stream: Union[BinaryIO, np.ndarray, bytes]) -> float:
+        print('in update func')
         if isinstance(stream, np.ndarray):
             chunk = audio_to_buffer(stream)
         else:

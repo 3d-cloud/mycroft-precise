@@ -23,6 +23,10 @@ __pycache__/
 /*/wake-word/
 /*/not-wake-word/
 /*/test/
+/generated/
+/speech/
+/speech_commands/
+
 
 !requirements.txt
 

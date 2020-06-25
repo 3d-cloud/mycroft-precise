@@ -99,13 +99,16 @@ class Listener:
     """Listener that preprocesses audio into MFCC vectors and executes neural networks"""
 
     def __init__(self, model_name: str, chunk_size: int = -1, runner_cls: type = None):
+        print('start Listener init')
         self.window_audio = np.array([])
         self.pr = inject_params(model_name)
         self.mfccs = np.zeros((self.pr.n_features, self.pr.n_mfcc))
         self.chunk_size = chunk_size
         runner_cls = runner_cls or self.find_runner(model_name)
         self.runner = runner_cls(model_name)
+        print('Using ' + str(self.runner) + ' runner')
         self.threshold_decoder = ThresholdDecoder(self.pr.threshold_config, pr.threshold_center)
+        print('end Listener init')
 
     @staticmethod
     def find_runner(model_name: str) -> Type[Runner]:

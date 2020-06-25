@@ -54,6 +54,7 @@ class ListenScript(BaseScript):
     usage = Usage(__doc__)
 
     def __init__(self, args):
+        print('start init')
         super().__init__(args)
         self.listener = Listener(args.model, args.chunk_size)
         self.audio_buffer = np.zeros(self.listener.pr.buffer_samples, dtype=float)
@@ -62,8 +63,10 @@ class ListenScript(BaseScript):
         self.runner = PreciseRunner(self.engine, args.trigger_level, sensitivity=args.sensitivity,
                                     on_activation=self.on_activation, on_prediction=self.on_prediction)
         self.session_id, self.chunk_num = '%09d' % randint(0, 999999999), 0
+        print('end init')
 
     def on_activation(self):
+        print('start activation')
         activate_notify()
 
         if self.args.save_dir:
@@ -72,8 +75,11 @@ class ListenScript(BaseScript):
             print()
             print('Saved to ' + nm + '.')
             self.chunk_num += 1
+        print('end activation')
+
 
     def on_prediction(self, conf):
+        print('start on prediction')
         if self.args.basic_mode:
             print('!' if conf > 0.7 else '.', end='', flush=True)
         else:
@@ -83,16 +89,20 @@ class ListenScript(BaseScript):
             bar = 'X' * units + '-' * (width - units)
             cutoff = round((1.0 - self.args.sensitivity) * width)
             print(bar[:cutoff] + bar[cutoff:].replace('X', 'x'))
+        print('end on prediction')
 
     def get_prediction(self, chunk):
+        print('start get prediction')
         audio = buffer_to_audio(chunk)
         self.audio_buffer = np.concatenate((self.audio_buffer[len(audio):], audio))
         return self.listener.update(chunk)
+        print('end get prediction')
 
     def run(self):
+        print('start run')
         self.runner.start()
         Event().wait()  # Wait forever
-
+        print('end run')
 
 main = ListenScript.run_main
 

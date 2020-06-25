@@ -69,8 +69,10 @@ class PreciseEngine(Engine):
 
 class ListenerEngine(Engine):
     def __init__(self, listener, chunk_size=2048):
+        print('start ListenerEngine init')
         Engine.__init__(self, chunk_size)
         self.get_prediction = listener.update
+        print('end ListenerEngine init')
 
 
 class ReadWriteStream(object):
@@ -119,10 +121,12 @@ class TriggerDetector:
     the predictions look like ...!!!..!!...
     """
     def __init__(self, chunk_size, sensitivity=0.5, trigger_level=3):
+        print('start TriggerDetector init')
         self.chunk_size = chunk_size
         self.sensitivity = sensitivity
         self.trigger_level = trigger_level
         self.activation = 0
+        print('end TriggerDetector init')
 
     def update(self, prob):
         # type: (float) -> bool
@@ -166,6 +170,7 @@ class PreciseRunner(object):
 
     def __init__(self, engine, trigger_level=3, sensitivity=0.5, stream=None,
                  on_prediction=lambda x: None, on_activation=lambda: None):
+        print('start PreciseRunner init')
         self.engine = engine
         self.trigger_level = trigger_level
         self.stream = stream
@@ -179,6 +184,8 @@ class PreciseRunner(object):
         self.is_paused = False
         self.detector = TriggerDetector(self.chunk_size, sensitivity, trigger_level)
         atexit.register(self.stop)
+        print('end PreciseRunner init')
+
 
     def _wrap_stream_read(self, stream):
         """
